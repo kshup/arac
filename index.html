@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Borusan Otomotiv - Test Sürüşü Etkinliği</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #1a1a1a;
+            --accent-color: #0077ff;
+            --text-color: #333;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-color);
+        }
+
+        .header {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 60px 0;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent-color);
+        }
+
+        .logo-container {
+            max-width: 200px;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+            filter: none;
+        }
+
+        .header h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h3 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 2px;
+            background: var(--accent-color);
+            margin: 20px auto;
+        }
+
+        .car-card {
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .car-card.selected {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 15px 40px rgba(0, 119, 255, 0.3);
+        }
+
+        .car-card.selected::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            z-index: 2;
+        }
+
+        .car-image {
+            height: 220px;
+            object-fit: contain;
+            width: 100%;
+            padding: 20px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .car-card:hover .car-image {
+            transform: scale(1.05);
+        }
+
+        .card-body {
+            padding: 25px;
+            background: white;
+            position: relative;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .form-check {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin-top: 0;
+            border: 2px solid var(--accent-color);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        .form-check-label {
+            font-size: 1rem;
+            color: var(--text-color);
+            margin-left: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0066cc;
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 255, 0.3);
+        }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px 50px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-message h4 {
+            color: var(--accent-color);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -60%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 30px 0;
+            }
+
+            .header h2 {
+                font-size: 2rem;
+            }
+
+            .logo-container {
+                max-width: 150px;
+            }
+
+            .car-image {
+                height: 180px;
+                padding: 15px;
+            }
+
+            .card-body {
+                padding: 20px;
+            }
+
+            .btn-primary {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        .footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="header text-center">
+        <div class="logo-container">
+            <img src="borusanotologo.jpg" alt="Borusan Otomotiv Logo">
+        </div>
+        <h2>Test Sürüşü Etkinliği</h2>
+    </div>
+
+    <div class="main-container">
+        <div class="section-title">
+            <h3>Test Sürüşü Yapmak İstediğiniz Aracı Seçiniz</h3>
+        </div>
+        <form id="carSelectionForm">
+            <div class="row">
+                <!-- BMW 8 Serisi -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://www.borusanotomotiv.com/bmw/stage2/fiyat-listesi/assets_fiyat_listesi/img/models/BMW8.png" class="card-img-top car-image" alt="BMW 8 Serisi">
+                        <div class="card-body">
+                            <h5 class="card-title">BMW 8 Serisi</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="bmw8" value="BMW 8 Serisi">
+                                <label class="form-check-label" for="bmw8">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BMW 4 Serisi -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://www.borusanotomotiv.com/bmw/stage2/fiyat-listesi/assets_fiyat_listesi/img/models/BMW4.png" class="card-img-top car-image" alt="BMW 4 Serisi">
+                        <div class="card-body">
+                            <h5 class="card-title">BMW 4 Serisi</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="bmw4" value="BMW 4 Serisi">
+                                <label class="form-check-label" for="bmw4">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BMW Z4 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://www.borusanotomotiv.com/bmw/stage2/fiyat-listesi/assets_fiyat_listesi/img/models/BMWZ4.png" class="card-img-top car-image" alt="BMW Z4">
+                        <div class="card-body">
+                            <h5 class="card-title">BMW Z4</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="bmwz4" value="BMW Z4">
+                                <label class="form-check-label" for="bmwz4">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BMW M Serisi -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://www.borusanotomotiv.com/bmw/stage2/fiyat-listesi/assets_fiyat_listesi/img/models/BMWM.png" class="card-img-top car-image" alt="BMW M Serisi">
+                        <div class="card-body">
+                            <h5 class="card-title">BMW M Serisi</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="bmwm" value="BMW M Serisi">
+                                <label class="form-check-label" for="bmwm">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- BMW 5 Serisi -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://www.borusanotomotiv.com/bmw/stage2/fiyat-listesi/assets_fiyat_listesi/img/models/yeniBMW5.png" class="card-img-top car-image" alt="BMW 5 Serisi">
+                        <div class="card-body">
+                            <h5 class="card-title">BMW 5 Serisi</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="bmw5" value="BMW 5 Serisi">
+                                <label class="form-check-label" for="bmw5">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- MINI Countryman -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://vehicle-images.dealerinspire.com/stock-images/chrome/e8c6b92ed631f00b6cdbe2be2a03c160.png" class="card-img-top car-image" alt="MINI Countryman">
+                        <div class="card-body">
+                            <h5 class="card-title">MINI Countryman</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="minicountryman" value="MINI Countryman">
+                                <label class="form-check-label" for="minicountryman">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Range Rover Sport -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://vehicle-images.dealerinspire.com/stock-images/chrome/40323f0bfa223e3f1b12c86947de2133.png" class="card-img-top car-image" alt="Range Rover Sport">
+                        <div class="card-body">
+                            <h5 class="card-title">Range Rover Sport</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="rrsport" value="Range Rover Sport">
+                                <label class="form-check-label" for="rrsport">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Range Rover Velar -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://minerva.leadboxhq.com/wp-content/uploads/2024/01/2025_landrover_rangerovervelar_dynamichse_FR_ArroiosGreyMetallic-removebg-preview.png" class="card-img-top car-image" alt="Range Rover Velar">
+                        <div class="card-body">
+                            <h5 class="card-title">Range Rover Velar</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="rrvelar" value="Range Rover Velar">
+                                <label class="form-check-label" for="rrvelar">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Range Rover Evoque -->
+                <div class="col-md-4 mb-4">
+                    <div class="card car-card">
+                        <img src="https://vehicle-images.dealerinspire.com/stock-images/thumbnails/large/chrome/17bdbd00da2ad0c0ce90bf399dbe3b5a.png" class="card-img-top car-image" alt="Range Rover Evoque">
+                        <div class="card-body">
+                            <h5 class="card-title">Range Rover Evoque</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="car" id="rrevoque" value="Range Rover Evoque">
+                                <label class="form-check-label" for="rrevoque">Seç</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-car me-2"></i>Test Sürüşü İçin Başvur
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        <h4><i class="fas fa-check-circle me-2"></i>İşlem Başarılı!</h4>
+        <p>Test sürüşü başvurunuz başarıyla alınmıştır.</p>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Borusan Otomotiv. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carCards = document.querySelectorAll('.car-card');
+            const form = document.getElementById('carSelectionForm');
+
+            carCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    carCards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    
+                    // Find and check the radio button
+                    const radio = this.querySelector('input[type="radio"]');
+                    if (radio) {
+                        radio.checked = true;
+                    }
+                });
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const selectedCar = document.querySelector('input[name="car"]:checked');
+                if (selectedCar) {
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'https://www.borusanotomotiv.com/';
+                    }, 3000);
+                } else {
+                    alert('Lütfen bir araç seçiniz.');
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
